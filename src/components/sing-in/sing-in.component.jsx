@@ -4,6 +4,7 @@ import "./sing-in.styles.scss";
 import FormInput from "../form-input/form-input.component";
 import CustomButton from "../custom-button/custom-button.compomnent";
 import { signInWithGoogle } from "../../firebase/firebase.utils";
+import { auth } from "../../firebase/firebase.utils";
 
 class SingIn extends React.Component {
   constructor(props) {
@@ -14,12 +15,19 @@ class SingIn extends React.Component {
     };
   }
 
-  handelSubmit = (e) => {
+  handelSubmit = async (e) => {
     e.preventDefault();
-    this.setState({
-      email: "",
-      password: "",
-    });
+
+    const { email, password } = this.state;
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+      this.setState({
+        email: "",
+        password: "",
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   handelChange = (e) => {
